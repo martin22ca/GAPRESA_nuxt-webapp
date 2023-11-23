@@ -10,13 +10,13 @@ export const Items: Array<MenuItem> = [
         title: 'Home',
         icon: 'bx:home',
         route: '/',
-        children:undefined
+        children: undefined
     },
     {
         title: 'Expedientes',
         icon: 'bx:file',
         route: '/records',
-        children:undefined
+        children: undefined
     },
     {
         title: 'Entradas',
@@ -27,13 +27,13 @@ export const Items: Array<MenuItem> = [
                 title: 'Carga',
                 icon: 'mingcute:upload-line',
                 route: '/input/loadData',
-                children:undefined
+                children: undefined
             },
             {
-                title: 'Entradas',
+                title: 'Registros',
                 icon: 'ic:round-log-in',
-                route: '/records',
-                children:undefined
+                route: '/input/recordsInfo',
+                children: undefined
             }
         ],
     },
@@ -45,15 +45,27 @@ export const Items: Array<MenuItem> = [
             {
                 title: 'Egreso',
                 icon: 'ic:round-log-out',
-                children:undefined,
+                children: undefined,
                 route: '/records',
             },
             {
                 title: 'Egreso',
                 icon: 'ic:round-log-out',
                 route: '/records',
-                children:undefined
+                children: undefined
             }
         ],
     },
+    {
+        title: 'Coordinador',
+        icon: 'material-symbols:groups',
+        route: '/records',
+        children: undefined
+    },
+    {
+        title: 'Prestadores',
+        icon: 'icon-park-outline:delivery',
+        route: '/providers',
+        children: undefined
+    }
 ]

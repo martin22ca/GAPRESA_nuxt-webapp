@@ -2,10 +2,10 @@
     <div class="text-sm breadcrumbs p-2">
         <ul>
             <li><a>Home</a></li>
-            <li><a>Expedientes</a></li>
+            <li><a>Registros de expedientes</a></li>
         </ul>
     </div>
-    <h1 class="text-2xl p-2">Expedientes</h1>
+    <h1 class="text-2xl p-2">Registros de expedientes</h1>
     <div class="card bg-transparent ">
         <div class="card-body">
             <div class="flex flex-row flex-grow">
@@ -21,29 +21,24 @@
             </div>
         </div>
     </div>
-    <DTM :rows="records" />
+    <div class="tableContainer">
+        <UTable :rows="providers">
+
+        </UTable>
+    </div>
 </template>
+  
 
 <script setup>
-import { getRecords } from '@/services/recordsService'
-
-const modal = ref(true)
-const records = ref([])
-const page = ref(1)
-const pageCount = 1000
+import { getProviders } from '@/services/providerService'
+const providers = ref([])
 
 onMounted(async () => {
-    const { data,refresh } = await getRecords()
-    records.value = data.value
-    if (data.value == null) refresh()
+    const { data } = await getProviders()
+    providers.value = data.value
+    console.log(providers.value)
 })
-
-const rows = computed(() => {
-    return records.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
-})
-
 </script>
-
 
 <style scoped>
 .tableContainer {
