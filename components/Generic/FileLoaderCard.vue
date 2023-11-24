@@ -1,5 +1,5 @@
 <template>
-    <dialog id="my_modal_1" class="modal" :open="modalControl.state" style="background-color: oklch(var(--b3)/.9);">
+    <dialog id="my_modal_1" class="modal" :open="modalControl.state" style="background-color: oklch(var(--b3)/.8);">
         <div class="modal-box ">
             <form method="dialog">
                 <button @click="toggleModal()"

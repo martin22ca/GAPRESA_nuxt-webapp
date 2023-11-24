@@ -34,6 +34,12 @@ export const Items: Array<MenuItem> = [
                 icon: 'ic:round-log-in',
                 route: '/input/recordsInfo',
                 children: undefined
+            },
+            {
+                title: 'Lotes',
+                icon: 'mdi:land-plots',
+                route: '/input/recordsInfo',
+                children: undefined
             }
         ],
     },

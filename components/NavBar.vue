@@ -33,8 +33,8 @@
                         <Icon name="ic:baseline-fullscreen" class="w-4 h-4" />
                     </button>
                     <div class="avatar placeholder">
-                        <div class="bg-neutral-focus text-neutral-content rounded-full w-12 border-2 border-neutral">
-                            <span class="text-xl text-neutral">K</span>
+                        <div class="bg-neutral-focus rounded-full w-12 border-2 border-accent">
+                            <span class="text-xl text-accent">K</span>
                         </div>
                     </div>
                 </div>

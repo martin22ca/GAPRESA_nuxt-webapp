@@ -43,12 +43,11 @@ const Now = new Date()
 Now.setHours(0, 0, 0, 0);
 
 const getInfo = async () => {
-    const { data } = await getConfig()
+    const { data, refresh } = await getConfig()
     for (const status of data.value) {
         const statusD = new Date(status.value)
         statusD.setHours(0, 0, 0, 0);
         const stateVal = statusD >= Now;
-        console.log('stateVal', stateVal, statusD, Now)
         if (status.id === 1) {
             state1.value = stateVal;
             lastLoad1.value = status.value
@@ -58,13 +57,6 @@ const getInfo = async () => {
         }
     }
     refreshFunc.value = refresh
-}
-
-const getPercentage = () => {
-    let val = 0
-    if (state2.value) val = val + 50
-    if (state1.value) val = val + 50
-    return val
 }
 
 onMounted(async () => {

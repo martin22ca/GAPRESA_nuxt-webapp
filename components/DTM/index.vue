@@ -1,76 +1,148 @@
 <template>
     <div class="table-wrapper">
-        <div class="flex flex-row flex-grow p-2 bg-neutral">
-            <select class="mx-2 select select-bordered basis-1/4">
+        <div class="flex flex-row p-4 bg-neutral sticky left-0">
+            <select class="mx-2 select select-bordered basis-1/4 ">
                 <option disabled selected>Selecionar Columnas</option>
-                <option v-for="col in cols"> {{ col.text }}</option>
+                <option v-for="col in cols">
+                    {{ col.text }}
+                </option>
             </select>
-            <input type="text" placeholder="Type here" class="mx-2 input input-bordered basis-3/4" />
+            <input type="text" placeholder="Type here" class="mx-2 input input-bordered basis-2/3" />
+            <button class="btn btn-circle bt-primary" @click="downloadExcel">
+                <Icon name="mdi:file-export" size="30px" />
+            </button>
         </div>
-        <table class="DMTable">
+        <table v-if="!loading" class="DMTable" id="tablID">
             <thead>
                 <tr>
                     <!-- Generate table header based on cols prop -->
-                    <th v-for="col in tableColumns" :key="col.id" class="p-2">{{ col.text }}</th>
+                    <th v-for="col in tableColumns" :key="col.id">{{ col.text }}</th>
                 </tr>
             </thead>
-            <tbody v-if="rows != null">
-                <!-- Generate table rows based on rows prop -->
-                <tr v-for="(item, index) in rows" :key="index">
-                    <td v-for="col in tableColumns" :key="col.id">{{ item[col.id] }}</td>
+            <tbody v-if="slicedRows != null">
+                <tr v-for="(item, index) in slicedRows" :key="index" :id="(index == selectedRow) ? 'selectedRow' : ''">
+                    <td v-for="col in tableColumns" :key="col.id">
+                        <!-- Check if slot for this column exists -->
+                        <template v-if="!$slots[col.id]">
+                            {{ item[col.id] }}
+                        </template>
+                        <template v-else :v-slot="[col.id]">
+                            <!-- Render scoped slot content for this column -->
+                            <slot :name="col.id" :row="item"></slot>
+                        </template>
+                    </td>
                 </tr>
             </tbody>
-            <span v-else class="loading loading-ring loading-lg"></span>
         </table>
+        <div class="flex flex-1 justify-center py-40 " v-else>
+            <Loader />
+        </div>
+        <div class="justify-end sticky bottom-0 bg-base-200 left-0">
+            <button class="btn m-2" @click="currentPage > 1 && (currentPage -= 1)">Previous</button>
+            <span>Page {{ currentPage }} of {{ totalPages }}</span>
+            <button class="btn m-2" @click="currentPage < totalPages && (currentPage += 1)">Next</button>
+        </div>
     </div>
 </template>
   
 <script setup lang="ts">
+import * as XLSX from 'xlsx';
+
 interface TableColumn {
     id: string;
     text: string;
-    order: number;
+    selected: Boolean;
 }
 
 interface TableRow {
     [key: string]: string; // Each key will be a string, and the value too
 }
-
 const props = defineProps({
+    selectedRow: {
+        type: Number,
+        default: null,
+    },
+    loading: {
+        type: Boolean,
+        default: false
+    },
     cols: {
-        type: Array<TableColumn>,
+        type: Array as () => TableColumn[],
         default: null
     },
     rows: {
-        type: Array<TableRow>,
-        default: null
-    },
-    rowCustomizations: {
-        type: Array<any>, // Array of objects specifying slotName and render function
+        type: Array as () => TableRow[],
         default: null
     }
-})
+});
 
-const selectedColumns = ref(props.cols);
+const tableContainer = ref<HTMLElement | null>(null);
+const rowsPerPage = ref(500); // Number of rows per page
+const currentPage = ref(1); // Current page number
+const totalPages = computed(() => Math.ceil(props.rows.length / rowsPerPage.value));
 
 const tableColumns = computed(() => {
     // If columns are not provided, generate columns from the keys of the first row
     if (!props.cols && props.rows.length > 0) {
         const firstRow = props.rows[0];
-        const algo = Object.keys(firstRow).map((key, index) => ({
+        return Object.keys(firstRow).map((key, index) => ({
             id: key,
             text: key,
             order: index + 1
         }))
-        return algo;
     }
     // Use provided columns if available
     return props.cols || [];
 });
 
+// Function to slice rows based on current page and rows per page
+const slicedRows = computed(() => {
+    const start = (currentPage.value - 1) * rowsPerPage.value;
+    const end = start + rowsPerPage.value;
+    return props.rows.slice(start, end);
+});
+
+const downloadExcel = () => {
+    const wb = XLSX.utils.book_new();
+    // Convert table data to worksheet
+    const wsData = [
+        tableColumns.value.map(col => col.text), // Headers
+        ...props.rows.map(row => tableColumns.value.map(col => row[col.id])) // Rows
+    ];
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    const fileName = `data_${Date.now()}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+};
+
+watch(
+    () => props.selectedRow,
+    (newValue: number) => {
+        if (newValue !== null && tableContainer.value) {
+            const selectedRowElement = tableContainer.value.querySelector(
+                `tr:nth-child(${newValue + 1})`
+            ) as HTMLElement | null;
+
+            if (selectedRowElement) {
+                selectedRowElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+        tableContainer.value = document.getElementById('tablID')
+        console.log('no', newValue, tableContainer.value)
+    }
+);
+
+onMounted(() => {
+    tableContainer.value = document.getElementById('tablID')
+})
+
 </script>
   
 <style scoped>
+#tablID {
+    transition: all;
+}
+
 .table-wrapper {
     max-width: 100%;
     flex-direction: column;
@@ -85,6 +157,7 @@ const tableColumns = computed(() => {
 }
 
 .DMTable {
+    padding: 10px;
     flex: 1 0 auto;
     border-radius: 5px;
     font-size: 12px;
@@ -117,6 +190,11 @@ const tableColumns = computed(() => {
     font-size: 12px;
 }
 
+.DMTable tr:hover {
+    background-color: oklch(var(--a));
+    color: oklch(var(--ac));
+}
+
 .DMTable thead th {
     color: oklch(var(--nc));
     background: oklch(var(--n));
@@ -129,6 +207,11 @@ const tableColumns = computed(() => {
 }
 
 .DMTable tr:nth-child(even) {
-    background: #F8F8F8;
+    border: 1px solid oklch(var(--n)/.1);
+}
+
+#selectedRow {
+    background: oklch(var(--p)/.9);
+    color: oklch(var(--pc)/.9);
 }
 </style>

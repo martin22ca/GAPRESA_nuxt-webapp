@@ -12,3 +12,16 @@ export async function getRecords() {
         throw error
     }
 }
+
+export async function getRecordsInfo() {
+    try {
+        return await useFetch('/info', {
+            baseURL: baseUrl,
+            method: 'GET',
+            timeout: 5000,
+        })
+    } catch (error) {
+        console.error('Error fetching records:', error);
+        throw error
+    }
+}
