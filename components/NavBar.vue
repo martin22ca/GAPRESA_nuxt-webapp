@@ -1,8 +1,8 @@
 <template>
-    <header class="sticky top-0 z-50">
-        <div class="flex flex-row p-2 bg-base-100 items-center">
+    <header class="sticky top-0 z-50 ">
+        <div class="flex flex-row p-2 bg-base-100 items-center ">
             <div class="flex-none">
-                <label class="btn swap">
+                <label class="btn btn-primary swap">
                     <input type="checkbox" @click="toggleDrawer?.()" />
                     <Icon name="ic:baseline-menu" class="swap-off" size="24px" />
                     <Icon name="ic:round-menu-open" class="swap-on" size="24px" />

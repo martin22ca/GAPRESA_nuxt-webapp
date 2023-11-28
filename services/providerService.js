@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:8000/providers'
+const baseUrl = 'http://192.168.0.133:8000/providers'
 
 export async function getProviders() {
     try {

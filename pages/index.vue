@@ -68,15 +68,11 @@
                 <div class="card bg-base-200 shadow-xl h-full">
                     <div class="card-body">
                         <h2 class="card-title">Card title!</h2>
-                        <div>
-                            Algo NO hay Error
-                        </div>
-                        <div>
-                            Algo NO hay Error
-                        </div>
-                        <div>
-                            Algo NO hay Error
-                        </div>
+                        <DDMenu size="40px">
+                            <p >
+                                Hola Munsoi
+                            </p>
+                        </DDMenu>
                     </div>
                 </div>
             </div>

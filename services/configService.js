@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:8000/config'
+const baseUrl = 'http://192.168.0.133:8000/config'
 
 export async function getConfig() {
     try {

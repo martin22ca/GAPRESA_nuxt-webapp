@@ -5,7 +5,9 @@
     </div>
     <div class="w-full" :style="contentStyles">
       <NavBar :toggle-drawer="toggleDrawer" />
-      <slot></slot>
+      <div class="p-2">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
