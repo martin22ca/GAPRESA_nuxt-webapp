@@ -1,11 +1,12 @@
-const baseUrl = 'http://192.168.0.133:8000/records'
+const URL = 'http://192.168.0.133:8000' + '/records'
 
-export async function getRecords() {
+export async function getRecords(datas = null) {
     try {
         return await useFetch('/', {
-            baseURL: baseUrl,
+            baseURL: URL,
             method: 'GET',
             timeout: 5000,
+            params: datas
         })
     } catch (error) {
         console.error('Error fetching records:', error);
@@ -13,12 +14,13 @@ export async function getRecords() {
     }
 }
 
-export async function getRecordsInfo() {
+export async function getRecordsInfo(datas = null) {
     try {
         return await useFetch('/info', {
-            baseURL: baseUrl,
+            baseURL: URL,
             method: 'GET',
             timeout: 5000,
+            params: datas
         })
     } catch (error) {
         console.error('Error fetching records:', error);

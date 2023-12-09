@@ -6,7 +6,7 @@
         </ul>
     </div>
     <h1 class="text-2xl p-2">Expedientes</h1>
-    <DTM :rows="records" :cols="headers" :loading="loadingData" class="w-full mr-2">
+    <DTM :rows="records" :cols="headers" :loading="loadingData"  @updateFilters="updateFilters" class="w-full mr-2">
         <template #avance="{ row }">
             <div class="radial-progress bg-primary text-primary-content" style="--size:4rem; --thickness: 3px;" :style="'--value:' +row.avance" role="progressbar">{{roundVal(row.avance,0)}}%</div>
         </template>
@@ -19,7 +19,10 @@
 </template>
 
 <script setup>
-import { getRecords } from '@/services/recordsService'
+import { getRecords } from '@/services/records'
+
+definePageMeta({ middleware: ['auth'] })
+
 const headers = [
     { id: 'id', text: 'id' },
     { id: 'id_provider', text: 'Prestador' },
@@ -59,15 +62,24 @@ const headers = [
     { id: 'avance', text: 'Avance' },
 ]
 const records = ref([])
+let filters = []
 const loadingData = ref(true)
 
-onMounted(async () => {
-    const { data, refresh } = await getRecords()
+const fetchResources = async () => {
+    const { data, refresh } = await getRecords(filters)
     records.value = data.value
     if (data.value == null) refresh()
     setTimeout(() => { loadingData.value = false }, 500);
+}
 
+onMounted(async () => {
+    fetchResources()
 })
+
+const updateFilters = (appliedFilters) => {
+    filters = appliedFilters;
+    fetchResources()
+}
 
 
 const roundVal = (val,decimal)=>{

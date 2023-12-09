@@ -1,48 +1,4 @@
 <template>
-    <dialog class="modal" :open="columnDialog" style="background-color: oklch(var(--b3)/.8);">
-        <div class="modal-box max-w-4xl bg-base-100">
-            <form method="dialog">
-                <button @click="columnDialog = false"
-                    class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-            </form>
-            <h1 class="text-2xl">Selecionar Columnas </h1>
-            <div class="divider mx-auto"></div>
-            <h2 :class="'badge badge-' + (columnText != '' ? 'warning' : 'success')"> {{ columnText }}</h2>
-            <div className="grid grid-cols-2 grid-rows-1 gap-3 py-4" @dragenter.prevent @dragover.prevent>
-                <div @dragenter.prevent @dragover.prevent>
-                    <h2 class="text-xl">Columnas disponibles</h2>
-                    <div v-for="(col, index) in baseCols"
-                        class="flex flex-row justify-between bg-neutral text-neutral-content w-full m-1 rounded p-2">
-                        <div class="">
-                            Id: {{ index }}
-                        </div>
-                        <div class="badge badge-primary my-1 badge-lg" draggable="true" @drag="startDrag(col.id)">
-                            {{ col.text }}
-                        </div>
-                    </div>
-                </div>
-                <div @drop="onDrop()">
-                    <h2 class="text-xl text-end">Columnas Selecionadas</h2>
-                    <div v-for="(col, index) in selectedCols"
-                        class="flex flex-row justify-between bg-neutral text-neutral-content w-full m-1 rounded p-2"
-                        draggable="true">
-                        <div class="">
-                            Id: {{ index }}
-                        </div>
-                        <div>
-                            <div class="badge badge-secondary my-1 badge-lg">
-                                {{ col.text }}
-                            </div>
-                            <button @click="removeCol(index)" class="mx-2 px-2 py-1 bg-base-200 rounded-xl">
-                                <Icon name="material-symbols:close-rounded" size="20px"
-                                    class="text-accent rounded-xl cursor-pointer" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </dialog>
     <dialog class="modal" :open="filtersDialog" style="background-color: oklch(var(--b3)/.8);">
         <div class="modal-box max-w-full h-5/6 bg-base-100">
             <form method="dialog">
@@ -146,10 +102,6 @@
     <!--   TABLA   -->
     <div class="table-wrapper ">
         <div class="flex flex-row p-4 gap-2 bg-neutral sticky left-0">
-            <button class="btn bt-primary" @click="columnDialog = true">
-                Columnas
-                <Icon name="material-symbols:arrow-drop-down" size="20px" class="text-accent rounded-xl cursor-pointer" />
-            </button>
             <button v-if="appliedFilters.length > 0" class="btn bt-primary mx-2" @click="removeFilter(1, true)">
                 Limpiar filtros
                 <Icon name="material-symbols:cleaning-services" size="20px" class="text-accent rounded-xl cursor-pointer" />
@@ -165,7 +117,6 @@
 
                 </slot>
             </div>
-
         </div>
         <table v-if="!loading" class="DMTable" id="tablID">
             <div>
@@ -237,15 +188,11 @@ const props = defineProps({
 
 const emits = defineEmits(['updateFilters'])
 
-const config = useRuntimeConfig()
 let filterIdCounter = 0;
 const filters = ref()
 const selectedColIndex = ref(0)
 const appliedFilters = ref([])
-const indexCol = ref('')
 const filtersDialog = ref(false);
-const columnDialog = ref(false);
-const columnText = ref('')
 const tableContainer = ref(null);
 const baseCols = ref([]);
 const selectedCols = ref([]);
@@ -282,35 +229,6 @@ const downloadExcel = () => {
     const fileName = `data_${Date.now()}.xlsx`;
     XLSX.writeFile(wb, fileName);
 };
-
-
-const startDrag = (idCol) => {
-    columnText.value = ''
-    indexCol.value = idCol
-};
-
-
-const removeCol = (itemIndex) => {
-    selectedCols.value.splice(itemIndex, 1)
-}
-
-const onDrop = () => {
-    const itemId = indexCol.value
-    if (itemId !== undefined) {
-        const exists = selectedCols.value.find((item) => item.id == itemId)
-        if (exists) {
-            columnText.value = 'Columna ya Selecionada.'
-        }
-        else {
-            const item = props.cols.find((item) => item.id === itemId);
-            if (item) {
-                // Handle the found 'item' here
-                selectedCols.value.push(item)
-            }
-        }
-    }
-};
-
 
 const createNewFilter = (filterOpt, idCol, val = '') => {
     const newFilter = {

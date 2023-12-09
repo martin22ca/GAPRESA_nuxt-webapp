@@ -5,7 +5,6 @@
             <li><a>Registros de expedientes</a></li>
         </ul>
     </div>
-    <ModalRecord/>
     <div class="flex flex-row">
         <div class="card bg-neutral text-neutral-content m-2 basis-1/3">
             <div class="card-body items-start">
@@ -95,7 +94,7 @@
                 </button>
             </div>
         </div>
-        <DTM class="basis-2/3" :rows="infoRecords" :loading="loadingData" :cols="headers" :selected-row="selectedRow">
+        <DTM class="basis-2/3" :rows="infoRecords" :loading="loading" :cols="headers" :selected-row="selectedRow" @updateFilters="updateFilters">
             <template #assigned="{ row }">
                 <input type="checkbox" :checked="row.assigned" class="checkbox checkbox-secondary" disabled />
             </template>
@@ -105,9 +104,13 @@
   
 
 <script setup>
-import { getRecordsInfo } from '@/services/recordsService'
+import { getRecordsInfo } from '@/services/records'
+definePageMeta({ middleware: ['auth'] })
+
+
+let filters = []
 const infoRecords = ref([])
-const loadingData = ref(true)
+const loading = ref(true)
 const selectedRow = ref(0)
 
 const headers = [
@@ -120,8 +123,6 @@ const headers = [
     { id: 'date_close', text: 'Fecha Cierre', order: 7 },
     { id: 'seal_number', text: 'Precinto', order: 5 },
     { id: 'observation', text: 'Observacion', order: 6 },
-
-
 ]
 
 const manageRowChange = (val) => {
@@ -131,12 +132,21 @@ const manageRowChange = (val) => {
     selectedRow.value = newVal
 }
 
+const fetchResources = async () => {
+    const { data,refresh } = await getRecordsInfo(filters)
+    infoRecords.value = data.value
+    if (data.value == null) refresh()
+    setTimeout(() => { loading.value = false }, 500);
+}
 
 onMounted(async () => {
-    const { data } = await getRecordsInfo()
-    setTimeout(() => { loadingData.value = false }, 500);
-    infoRecords.value = data.value
+    fetchResources()
 })
+
+const updateFilters = (appliedFilters) => {
+    filters = appliedFilters;
+    fetchResources()
+}
 </script>
 
 <style scoped>

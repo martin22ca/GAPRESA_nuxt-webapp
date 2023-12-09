@@ -19,26 +19,32 @@ export const Items: Array<MenuItem> = [
         children: undefined
     },
     {
+        title: 'Prestadores',
+        icon: 'icon-park-outline:delivery',
+        route: '/providers',
+        children: undefined
+    },
+    {
         title: 'Entradas',
         icon: 'ic:round-log-in',
         route: '/input',
         children: [
             {
-                title: 'Carga',
+                title: 'Carga DB',
                 icon: 'mingcute:upload-line',
                 route: '/input/loadData',
                 children: undefined
             },
             {
-                title: 'Registros',
+                title: 'Carga Digital',
                 icon: 'ic:round-log-in',
                 route: '/input/recordsInfo',
                 children: undefined
             },
             {
-                title: 'Lotes',
+                title: 'Carga Fisico',
                 icon: 'mdi:land-plots',
-                route: '/input/recordsInfo',
+                route: '/input/manualInput',
                 children: undefined
             }
         ],
@@ -65,13 +71,15 @@ export const Items: Array<MenuItem> = [
     {
         title: 'Coordinador',
         icon: 'material-symbols:groups',
-        route: '/records',
-        children: undefined
+        route: '/management',
+        children: [
+            {
+                title: 'Usuarios',
+                icon: 'ph:users',
+                route: '/management/users',
+                children: undefined
+            },
+        ]
     },
-    {
-        title: 'Prestadores',
-        icon: 'icon-park-outline:delivery',
-        route: '/providers',
-        children: undefined
-    }
+
 ]

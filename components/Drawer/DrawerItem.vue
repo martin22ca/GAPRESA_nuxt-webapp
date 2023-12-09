@@ -1,7 +1,7 @@
 <template>
     <div>
         <li v-if="hasChilds" class="rounded-lg">
-            <a @click="showMenu" class="p-0 menu-dropdown-toggle text-md">
+            <a @click="showMenu" class="p-0 pr-4 menu-dropdown-toggle text-md ">
                 <button class="btn btn-ghost hover:bg-transparent">
                     <Icon :name="props.icon ?? 'file-icons:default'" class="text-xl" />
                     {{ props.title }}

@@ -51,7 +51,8 @@
 </template>
 
 <script setup>
-import { postAssignment, postDb } from '@/services/configService'
+import { postAssignment, postDb } from '@/services/config'
+
 const props = defineProps({
     cardT: String,
     description: String,
@@ -73,6 +74,7 @@ const toastControl = ref({
 })
 const fileInputRef = ref(null)
 const selectedFile = ref(null);
+const config = useRuntimeConfig()
 
 const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -96,9 +98,9 @@ const sendFileToApi = async (file) => {
             toggleModal('Los datos estan siendo enviados',
                 'El archivo esta siendo validado por el servidor, por favor aguarde. Este proceso no debe de durar mas de 1 minuto.')
             if (props.isDb) {
-                data = await postDb(formData)
+                data = await postDb(config.public.apiBase,formData)
             } else {
-                data = await postAssignment(formData)
+                data = await postAssignment(config.public.apiBase,formData)
             }
             if (data.data.value.success) {
                 toggleModal()

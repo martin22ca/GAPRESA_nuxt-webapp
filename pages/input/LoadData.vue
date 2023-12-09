@@ -31,7 +31,11 @@
 
 
 <script setup>
-import { getConfig } from '~/services/configService.js'
+import { getConfig } from '~/services/config'
+
+definePageMeta({ middleware: ['auth'] })
+
+const config = useRuntimeConfig()
 const state1 = ref(false);
 const state2 = ref(false);
 const lastLoad1 = ref(null)
@@ -43,7 +47,7 @@ const Now = new Date()
 Now.setHours(0, 0, 0, 0);
 
 const getInfo = async () => {
-    const { data, refresh } = await getConfig()
+    const { data, refresh } = await getConfig(config.public.apiBase)
     for (const status of data.value) {
         const statusD = new Date(status.value)
         statusD.setHours(0, 0, 0, 0);

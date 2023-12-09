@@ -19,9 +19,13 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
+    "@handsontable/vue3": "^14.0.0",
     "@pinia/nuxt": "^0.5.1",
+    "@vee-validate/nuxt": "^4.12.2",
+    "@vee-validate/yup": "^4.12.2",
     "chart.js": "^4.4.0",
     "daisyui": "^4.0.9",
+    "handsontable": "^14.0.0",
     "vue-chartjs": "^5.2.0",
     "xlsx": "^0.18.5"
   }

@@ -46,9 +46,7 @@
                 <div class="hero bg-base-100">
                     <div class="hero-content flex-col lg:flex-row">
                         <div>
-                            <h1 class="text-5xl font-bold">Bienvenido!</h1>
-                            <p class="p-2">Nombre: Juan Perez</p>
-                            <p class="p-2">Usuario: JuanPepe</p>
+                            <h1 class="text-5xl font-bold text-end">Bienvenido, {{ name }}</h1>
                         </div>
                     </div>
                 </div>
@@ -69,7 +67,7 @@
                     <div class="card-body">
                         <h2 class="card-title">Card title!</h2>
                         <DDMenu size="40px">
-                            <p >
+                            <p>
                                 Hola Munsoi
                             </p>
                         </DDMenu>
@@ -79,3 +77,19 @@
         </div>
     </div>
 </template>
+
+<script setup>
+import { userDataStore } from '@/stores/userStore'
+
+definePageMeta({ middleware: ['auth'] })
+const store = userDataStore()
+
+
+const name = ref('')
+const user_name = ref('')
+
+
+onMounted(() => {
+    name.value = store.name
+})
+</script>

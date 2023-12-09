@@ -1,10 +1,11 @@
 <template>
     <div :class="'dropdown dropdown-bottom dropdown-' + (location)">
         <div tabindex="0" role="button" class="">
-            <Icon name="mdi:dots-vertical" :size="props.size"
-                class="bg-primary text-primary-content rounded-xl cursor-pointer" />
+            {{ buttonText }}
+            <Icon :name="iconName" :size="props.size" class="bg-primary text-primary-content rounded-xl cursor-pointer" />
         </div>
-        <ul class="dropdown-content show z-50 menu p-2 shadow bg-base-100 rounded-box w-52">
+        <ul class="dropdown-content show menu p-2 shadow bg-base-100 rounded-box overflow-y-auto"
+            style="max-height: 70vh; z-index: {{zValue}};">
             <slot></slot>
         </ul>
     </div>
@@ -13,13 +14,25 @@
 <script setup lang="ts">
 
 const props = defineProps({
+    zValue: {
+        type: Number,
+        default: 50,
+    },
     size: {
         type: String,
         default: '20px',
     },
+    buttonText: {
+        type: (String||Number),
+        default: '',
+    },
     location: {
         type: String,
-        default: 'right'
+        default: ''
+    },
+    iconName: {
+        type: String,
+        default: 'mdi:dots-vertical'
     }
 })
 

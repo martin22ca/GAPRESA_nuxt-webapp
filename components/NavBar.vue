@@ -34,7 +34,7 @@
                     </button>
                     <div class="avatar placeholder">
                         <div class="bg-neutral-focus rounded-full w-12 border-2 border-accent">
-                            <span class="text-xl text-accent">K</span>
+                            <span class="text-xl text-accent">{{initial}}</span>
                         </div>
                     </div>
                 </div>
@@ -44,11 +44,20 @@
 </template>
 
 <script setup lang="ts">
+import { userDataStore } from '@/stores/userStore'
 import ThemePicker from './Generic/ThemePicker.vue'
 
+const store = userDataStore()
+
+const initial = ref('J')
 
 const props = defineProps({
     toggleDrawer: Function,
+})
+
+
+onMounted(()=>{
+    initial.value = store.name[0]
 })
 
 </script>

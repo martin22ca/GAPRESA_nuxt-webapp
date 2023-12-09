@@ -6,17 +6,22 @@
                 <li><a>Prestadores</a></li>
             </ul>
         </div>
-        <h1 class="text-2xl p-2">Prestadores</h1>
-        <DTM :rows="providers" :cols="headers" :loading="loading">
-            <template #business_name="{ row }">
-                {{ row.business_name }}
-            </template>
-        </DTM>
+        <div>
+            <h1 class="text-2xl p-2">Prestadores</h1>
+        </div>
+        <hot-table :data="providers" :rowHeaders="true" :colHeaders="true">
+
+        </hot-table>
     </div>
 </template>
+
 <script setup>
-import { getProviders } from '@/services/providerService'
-const loading = ref(true)
+import { hotTable } from '@handsontable/vue3'
+import { getProviders } from '@/services/providers'
+import { registerAllModules } from 'handsontable/registry';
+import 'handsontable/dist/handsontable.full.css';
+
+definePageMeta({ middleware: ['auth'] })
 const headers = [
     { id: 'id', text: 'id', order: 1, selected: true },
     { id: 'coordinator_number', text: 'coordinador', order: 2, selected: true },
@@ -29,15 +34,24 @@ const headers = [
     { id: 'id_pecularity', text: 'Particularidad', order: 9, selected: true },
 ]
 
+const loading = ref(true)
 const providers = ref([])
+let filters = []
 
-onMounted(async () => {
-    const { data, refresh } = await getProviders()
+const fetchResources = async () => {
+    const { data, refresh } = await getProviders(filters)
     providers.value = data.value
     if (data.value == null) refresh()
-    setTimeout(() => { }, 1000);
-    loading.value = false
+    setTimeout(() => { loading.value = false }, 500);
+}
+
+onMounted(async () => {
+    fetchResources()
 })
 
+const updateFilters = (appliedFilters) => {
+    filters = appliedFilters;
+    fetchResources()
+}
 
 </script>

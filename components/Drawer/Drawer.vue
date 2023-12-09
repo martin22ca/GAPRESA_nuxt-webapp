@@ -1,8 +1,8 @@
 <template>
-  <div class='drawer w-60 fixed '>
+  <div class='drawer w-60 fixed'>
     <input id="my-drawer" type="checkbox" class="drawer-toggle " />
-    <aside class="w-60 h-screen bg-base-100 flex flex-col border-r-2 border-neutral">
-      <div class="bg-base-100 sticky top-0 z-20 hidden items-center gap-2 bg-opacity-90 px-4 py-2 backdrop-blur lg:flex ">
+    <aside class="w-60 h-screen bg-base-100 flex flex-col border-r-2 border-neutral sticky end-0">
+      <div class="bg-base-100 z-20 hidden items-center gap-2 bg-opacity-90 px-4 py-2 backdrop-blur lg:flex ">
         <a href="/" aria-current="page" aria-label="Homepage" class="flex-0 btn btn-ghost px-2"
           data-svelte-h="svelte-pw6yxt">
           <div class="uppercase font-title inline-flex text-lg md:text-2xl text-accent">G-<span
@@ -17,7 +17,7 @@
       <div class="mt-auto items-center p-5">
         <div>
           <GenericThemePicker />
-          <button class="btn w-full">
+          <button class="btn w-full" @click="logOut">
             Log Out
           </button>
         </div>
@@ -27,8 +27,18 @@
 </template>
 
 <script setup lang="ts">
+import { userDataStore } from '@/stores/userStore'
 import type { MenuItem } from './menuItems';
 import { Items } from './menuItems'
+
+const store = userDataStore()
+const router = useRouter()
+
+const logOut = ()=>{
+  store.$reset()
+  router.push({ path: "/login" })
+
+}
 
 const itemArr: Array<MenuItem> = Items
 
